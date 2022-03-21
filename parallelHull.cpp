@@ -9,8 +9,10 @@
 #include <unistd.h>
 #include <chrono>
 #include <thread>
+#include <algorithm>
 
 using namespace std; //std::
+
 
 pthread_mutex_t mut;
 int TERMINATE = 0;
@@ -239,6 +241,8 @@ void find_hull(vector<Point>S, Point p1, Point p2){
 //-----------------------------MAIN THREAD-----------------------------------------------------
 
 int main(int argc, char *argv[]){
+	auto start = chrono::high_resolution_clock::now();
+
     pthread_t *tid;
 	pthread_mutex_init(&queue_mutex, NULL);
     pthread_cond_init(&condQueue, NULL);
@@ -326,7 +330,9 @@ int main(int argc, char *argv[]){
 	cout << "\n========== CONVEX HULL ==========\n";
 	print_vector_of_points(convex_hull);
 
-
+	auto stop = chrono::high_resolution_clock::now();
+	auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
+	cout<< duration.count() << "ms elapsed."<<endl;
 	pthread_mutex_destroy(&queue_mutex);
     pthread_cond_destroy(&condQueue);
 	//ends program
